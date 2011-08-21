@@ -4,6 +4,16 @@ import os
 import sys
 import ConfigParser
 import time
+
+def TamanoTotalArchivosEnCarpeta():
+	tamanoTotal = 0
+
+	for fichero in os.listdir(rutaActual):
+		if os.path.isfile(rutaActual + "/" + fichero):
+			tamanoTotal = tamanoTotal + ((os.path.getsize(rutaActual+"/"+fichero) / 1024 ) / 1024)
+	
+	return tamanoTotal
+
  
 def ConvertirFichero(fichero):
 	print "Convirtiendo el fichero: " + rutaActual + "/" + fichero
@@ -71,6 +81,25 @@ def NombreFinal():
 
 	return ficheroFinal	
 
+def Ejecutar():
+	
+	NombreFinal()
+
+	CrearCarpetas()
+
+	ConvertirFicherosDelDirectorio()
+
+	CrearFicheroFinal()
+
+	BorrarTemporal()
+	
+def MostrarMensajeEspera():
+	print ""
+	print "A la espera...(Puede parar el proceso con Ctrl-C"
+	print ""
+	print ""
+
+
 cfg = ConfigParser.ConfigParser()
 if not cfg.read(["./tratvid.cfg"]):
 	print "No existe el archivo de configuracion"	
@@ -84,12 +113,16 @@ extensionSalida = cfg.get("salida","extension")
 ficheroTemporal = cfg.get("salida","ficherotemporal")
 ficheroFinal 	= NombreFinal()
 
-NombreFinal()
+if (sys.argv[2] == '-d'):
+	print "INICIADA LA APLICACION TratVid"
+	MostrarMensajeEspera()
+		
+	while True:
+		time.sleep(int(cfg.get("opciones","tiempoespera")))
 
-CrearCarpetas()
-
-ConvertirFicherosDelDirectorio()
-
-CrearFicheroFinal()
-
-BorrarTemporal()
+		if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
+			Ejecutar()
+			MostrarMensajeEspera()
+	
+else:
+	Ejecutar()
