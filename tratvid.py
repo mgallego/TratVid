@@ -63,7 +63,7 @@ def CrearFicheroFinal():
 	
 	destino = open(rutaTemporal + ficheroTemporal,'wb')
 
-	for filename in iglob(os.path.join(rutaTemporal,'*.avi')):
+	for filename in sorted(iglob(os.path.join(rutaTemporal,'*.avi'))):
 		shutil.copyfileobj(open(filename,'rb'), destino)
 
 	destino.close()
