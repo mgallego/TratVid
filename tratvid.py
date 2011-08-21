@@ -35,7 +35,8 @@ def CrearCarpetas():
 
 def ConvertirFicherosDelDirectorio():
 	for name in os.listdir(rutaActual):
-		ConvertirFichero(name)
+		if os.path.isfile(rutaActual + "/" + name):
+			ConvertirFichero(name)
 	
 def CrearFicheroFinal():
 	print "Creando el fichero final: " + rutaFinal + ficheroFinal
