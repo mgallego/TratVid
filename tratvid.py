@@ -4,7 +4,7 @@ import os
 import sys
 import ConfigParser
 import time
-
+ 
 def ConvertirFichero(fichero):
 	print "Convirtiendo el fichero: " + rutaActual + "/" + fichero
 
