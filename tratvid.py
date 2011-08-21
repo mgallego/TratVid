@@ -6,7 +6,7 @@ import ConfigParser
 import time
 
 def ConvertirFichero(fichero):
-	os.system("ffmpeg -i " + fichero + " -an -sameq -y -s "+ resolucion+" "+ rutaTemporal + fichero + extensionSalida)
+	os.system("ffmpeg -i " + rutaActual + "/" + fichero + " -an -sameq -y -s "+ resolucion+" "+ rutaTemporal + fichero + extensionSalida)
 
 def BorrarTemporal():
 	shutil.rmtree(rutaTemporal)
@@ -20,7 +20,7 @@ def CrearRutaFinal():
 		os.mkdir(rutaFinal)
 
 def ConvertirFicherosDelDirectorio():
-	for name in os.listdir(sys.argv[1]):
+	for name in os.listdir(rutaActual):
 		ConvertirFichero(name)
 	
 def CrearFicheroFinal():
@@ -44,9 +44,10 @@ cfg = ConfigParser.ConfigParser()
 if not cfg.read(["./tratvid.cfg"]):
 	print "No existe el archivo de configuracion"	
 
+rutaActual		= os.path.realpath(sys.argv[1])
 resolucion      = cfg.get("video","resolucion")
-rutaTemporal    = os.getcwd() + cfg.get("rutas","temporal")
-rutaFinal		= os.getcwd() + cfg.get("rutas","final")
+rutaTemporal    = rutaActual + cfg.get("rutas","temporal")
+rutaFinal		= rutaActual + cfg.get("rutas","final")
 extensionSalida = cfg.get("salida","extension")
 
 CrearRutaTemporal()
