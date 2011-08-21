@@ -10,8 +10,17 @@ def ConvertirFichero(fichero):
 
 	os.system("ffmpeg -i " + rutaActual + "/" + fichero + " -an -sameq -y -s "+ resolucion+" "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
 
+
+def EliminarFichero(fichero):
+	if (cfg.get("opciones","eliminaroriginal") == "1"):
+		print "Eliminando el fichero: " + fichero
+		os.remove(fichero)
+
+
 def BorrarTemporal():
-	shutil.rmtree(rutaTemporal)
+	if (cfg.get("opciones","eliminartemporal") == "1"):
+		print "Eliminando el directorio temporal"
+		shutil.rmtree(rutaTemporal)
 
 def CrearRutaTemporal():
 	if not os.path.exists(rutaTemporal):
@@ -37,9 +46,10 @@ def ConvertirFicherosDelDirectorio():
 	for name in os.listdir(rutaActual):
 		if os.path.isfile(rutaActual + "/" + name):
 			ConvertirFichero(name)
+			EliminarFichero(rutaActual + "/" + name)
 	
 def CrearFicheroFinal():
-	print "Creando el fichero final: " + rutaFinal + ficheroFinal
+	print "Creando el fichero final: " + rutaFinal + ficheroFinal + extensionSalida
 	
 	destino = open(rutaTemporal + ficheroTemporal,'wb')
 
@@ -58,7 +68,6 @@ def NombreFinal():
 
 	for i in range(6):
 		ficheroFinal = ficheroFinal + str(fecha[i])
-	#ficheroFinal = ficheroFinal + ".avi"
 
 	return ficheroFinal	
 
