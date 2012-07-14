@@ -12,7 +12,6 @@ def TamanoTotalArchivosEnCarpeta():
 		if os.path.isfile(rutaActual + "/" + fichero):
 			tamanoTotal = tamanoTotal + ((os.path.getsize(rutaActual+"/"+fichero) / 1024 ) / 1024)
 	return tamanoTotal
-
  
 def ConvertirFichero(fichero):
 	print "Convirtiendo el fichero: " + rutaActual + "/" + fichero
