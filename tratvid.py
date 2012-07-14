@@ -1,4 +1,5 @@
 from  glob import iglob
+import signal
 import shutil
 import os
 import sys
@@ -7,25 +8,21 @@ import time
 
 def TamanoTotalArchivosEnCarpeta():
 	tamanoTotal = 0
-
 	for fichero in os.listdir(rutaActual):
 		if os.path.isfile(rutaActual + "/" + fichero):
 			tamanoTotal = tamanoTotal + ((os.path.getsize(rutaActual+"/"+fichero) / 1024 ) / 1024)
-	
 	return tamanoTotal
 
  
 def ConvertirFichero(fichero):
 	print "Convirtiendo el fichero: " + rutaActual + "/" + fichero
-
-	os.system("ffmpeg -i " + rutaActual + "/" + fichero + " -an -sameq -y -s "+ resolucion+" "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
-
+	for paso in [1,2]:
+		os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass "+ paso + " "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
 
 def EliminarFichero(fichero):
 	if (cfg.get("opciones","eliminaroriginal") == "1"):
 		print "Eliminando el fichero: " + fichero
 		os.remove(fichero)
-
 
 def BorrarTemporal():
 	if (cfg.get("opciones","eliminartemporal") == "1"):
@@ -99,30 +96,32 @@ def MostrarMensajeEspera():
 	print ""
 	print ""
 
-
 cfg = ConfigParser.ConfigParser()
 if not cfg.read(["./tratvid.cfg"]):
 	print "No existe el archivo de configuracion"	
 
-rutaActual		= os.path.realpath(sys.argv[1])
-resolucion      = cfg.get("video","resolucion")
-rutaTemporal    = rutaActual + cfg.get("rutas","temporal")
-rutaFinal		= rutaActual + cfg.get("rutas","final")
-rutaLogs		= rutaActual + cfg.get("rutas","logs")
+rutaActual = os.path.realpath(sys.argv[1])
+resolucion = cfg.get("video","resolucion")
+videoCodec = cfg.get("video","codec")
+threads = cfg.get("video","threads")
+bitrate = cfg.get("video","bitrate")
+rutaTemporal = rutaActual + cfg.get("rutas","temporal")
+rutaFinal =  rutaActual + cfg.get("rutas","final")
+rutaLogs = rutaActual + cfg.get("rutas","logs")
 extensionSalida = cfg.get("salida","extension")
 ficheroTemporal = cfg.get("salida","ficherotemporal")
-ficheroFinal 	= NombreFinal()
+ficheroFinal = NombreFinal()
 
-if (sys.argv[2] == '-d'):
+if ( sys.argv[2] == '-d'):
 	print "INICIADA LA APLICACION TratVid"
 	MostrarMensajeEspera()
-		
+	
 	while True:
 		time.sleep(int(cfg.get("opciones","tiempoespera")))
-
+		
 		if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
 			Ejecutar()
 			MostrarMensajeEspera()
-	
+			
 else:
 	Ejecutar()
