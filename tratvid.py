@@ -16,7 +16,7 @@ def TamanoTotalArchivosEnCarpeta():
  
 def ConvertirFichero(fichero):
 	print "Convirtiendo el fichero: " + rutaActual + "/" + fichero
-	os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass 2 "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
+	os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass 1 "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
 	os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass 2 "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
 
 def EliminarFichero(fichero):
