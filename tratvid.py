@@ -59,15 +59,14 @@ def ConvertirFicherosDelDirectorio():
 def CrearFicheroFinal():
 	print "Creando el fichero final: " + rutaFinal + ficheroFinal + extensionSalida
 	
-	destino = open(rutaTemporal + ficheroTemporal,'wb')
-
-	for filename in sorted(iglob(os.path.join(rutaTemporal,'*.avi'))):
-		shutil.copyfileobj(open(filename,'rb'), destino)
-
-	destino.close()
-
-	os.system("ffmpeg -i " + rutaTemporal + ficheroTemporal + " -sameq " + rutaFinal + ficheroFinal + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
-
+	appends = ''
+	for filename in sorted(iglob(os.path.join(rutaTemporal,'*'+ extensionSalida))):
+		if appends == '':
+			appends = ' --load '+ filename
+		else:
+			appends = appends + ' --append '+ filename
+			
+	os.system("avidemux2_cli --nogui --force-unpack --force-b-frame --force-alt-h264  --force-smart " + appends +" --save-raw-audio --save-raw-video  --save "+ rutaFinal + ficheroFinal + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
 
 def NombreFinal():
 	fecha = time.localtime()
@@ -80,15 +79,10 @@ def NombreFinal():
 	return ficheroFinal	
 
 def Ejecutar():
-	
 	NombreFinal()
-
 	CrearCarpetas()
-
 	ConvertirFicherosDelDirectorio()
-
 	CrearFicheroFinal()
-
 	BorrarTemporal()
 	
 def MostrarMensajeEspera():
