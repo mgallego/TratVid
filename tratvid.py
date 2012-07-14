@@ -114,17 +114,19 @@ ficheroTemporal = cfg.get("salida","ficherotemporal")
 ficheroFinal = NombreFinal()
 
 def main():
-	if ( sys.argv[2] == '-d'):
-		print "INICIADA LA APLICACION TratVid"
-		MostrarMensajeEspera()
-		
-		while True:
-			time.sleep(int(cfg.get("opciones","tiempoespera")))
+	if len(sys.argv) == 3:
+		if ( sys.argv[2] == '-d'):
+			print "INICIADA LA APLICACION TratVid"
+			MostrarMensajeEspera()
 			
-			if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
-				Ejecutar()
-				MostrarMensajeEspera()
+			while True:
+				time.sleep(int(cfg.get("opciones","tiempoespera")))
 				
+				if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
+					Ejecutar()
+					MostrarMensajeEspera()
+		else:
+			print "Parametro desconocido"
 	else:
 		Ejecutar()
 
