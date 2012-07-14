@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from  glob import iglob
 import signal
 import shutil
