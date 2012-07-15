@@ -51,7 +51,7 @@ def CrearCarpetas():
 	CrearRutaLogs()
 
 def ConvertirFicherosDelDirectorio():
-	for name in os.listdir(rutaActual):
+	for name in sorted(os.listdir(rutaActual)):
 		if os.path.isfile(rutaActual + "/" + name):
 			ConvertirFichero(name)
 			EliminarFichero(rutaActual + "/" + name)
