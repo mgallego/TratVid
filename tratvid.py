@@ -92,7 +92,7 @@ def MostrarMensajeEspera():
 	print ""
 
 cfg = ConfigParser.ConfigParser()
-if not cfg.read(["./tratvid.cfg"]):
+if not cfg.read(["/etc/tratvid/tratvid.cfg"]):
 	print "No existe el archivo de configuracion"	
 
 rutaActual = os.path.realpath(sys.argv[1])
