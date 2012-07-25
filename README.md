@@ -18,7 +18,7 @@ Uso
 
 ### Fichero de cofiguración
 Parámetros:
-## [video]
+#### [video]
 * resolucion: Resolución del video
 * codec: codec de compresión de video
 * bitrate: bitrate de compresión de video
