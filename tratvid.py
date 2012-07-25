@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from  glob import iglob
-import signal
 import shutil
 import os
 import sys
@@ -17,8 +16,10 @@ def TamanoTotalArchivosEnCarpeta():
  
 def ConvertirFichero(fichero):
 	print "Convirtiendo el fichero: " + rutaActual + "/" + fichero
-	os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass 1 "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
-	os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass 2 "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
+	commandOutput = os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass 1 "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
+	commandOutput =	os.system("avconv -i " + rutaActual + "/" + fichero + " -vcodec "+ videoCodec + " -threads "+ threads + " -vb "+ bitrate +" -an -y -s "+ resolucion+" -pass 2 "+ rutaTemporal + fichero + extensionSalida + " 2>> " + rutaLogs + ficheroFinal + ".log")
+	if commandOutput == 2:
+		exit()
 
 def EliminarFichero(fichero):
 	if (cfg.get("opciones","eliminaroriginal") == "1"):
@@ -53,9 +54,13 @@ def CrearCarpetas():
 def ConvertirFicherosDelDirectorio():
 	for name in sorted(os.listdir(rutaActual)):
 		if os.path.isfile(rutaActual + "/" + name):
-			ConvertirFichero(name)
+			try:
+				ConvertirFichero(name)
+			except KeyboardInterrupt:
+				print 'Ejecucion cancelada'
+				exit()
 			EliminarFichero(rutaActual + "/" + name)
-	
+
 def CrearFicheroFinal():
 	print "Creando el fichero final: " + rutaFinal + ficheroFinal + extensionSalida
 	
@@ -115,24 +120,26 @@ ficheroTemporal = cfg.get("salida","ficherotemporal")
 ficheroFinal = NombreFinal()
 
 def main():
-	if len(sys.argv) > 1:
-		if len(sys.argv) == 3:
-			if ( sys.argv[2] == '-d'):
-				print "INICIADA LA APLICACION TratVid"
-				MostrarMensajeEspera()
-			
-				while True:
-					time.sleep(int(cfg.get("opciones","tiempoespera")))
-					
-					if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
-						Ejecutar()
-						MostrarMensajeEspera()
-					else:
-						print "Parametro desconocido"
+	try:
+		if len(sys.argv) > 1:
+			if len(sys.argv) == 3:
+				if ( sys.argv[2] == '-d'):
+					print "INICIADA LA APLICACION TratVid"
+					MostrarMensajeEspera()
+					while True:
+						time.sleep(int(cfg.get("opciones","tiempoespera")))
+						if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
+							Ejecutar()
+							MostrarMensajeEspera()
+						else:
+							print "Parametro desconocido"
+			else:
+				Ejecutar()
 		else:
-			Ejecutar()
-	else:
-		MostrarParametros()
+			MostrarParametros()
+			exit()
+	except KeyboardInterrupt:
+		print 'Ejecucion cancelada'
 		exit()
 if __name__ == "__main__":
 	main()
