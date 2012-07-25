@@ -91,11 +91,18 @@ def MostrarMensajeEspera():
 	print ""
 	print ""
 
+def MostrarParametros():
+	print "Numero de parametros erroneo. Uso correcto:"
+	print "tratvid Path [-d]"
+
 cfg = ConfigParser.ConfigParser()
 if not cfg.read(["/etc/tratvid/tratvid.cfg"]):
 	print "No existe el archivo de configuracion"	
 
-rutaActual = os.path.realpath(sys.argv[1])
+if len(sys.argv) > 1:
+	rutaActual = os.path.realpath(sys.argv[1])
+else:
+	rutaActual = ''
 resolucion = cfg.get("video","resolucion")
 videoCodec = cfg.get("video","codec")
 threads = cfg.get("video","threads")
@@ -108,21 +115,24 @@ ficheroTemporal = cfg.get("salida","ficherotemporal")
 ficheroFinal = NombreFinal()
 
 def main():
-	if len(sys.argv) == 3:
-		if ( sys.argv[2] == '-d'):
-			print "INICIADA LA APLICACION TratVid"
-			MostrarMensajeEspera()
+	if len(sys.argv) > 1:
+		if len(sys.argv) == 3:
+			if ( sys.argv[2] == '-d'):
+				print "INICIADA LA APLICACION TratVid"
+				MostrarMensajeEspera()
 			
-			while True:
-				time.sleep(int(cfg.get("opciones","tiempoespera")))
-				
-				if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
-					Ejecutar()
-					MostrarMensajeEspera()
+				while True:
+					time.sleep(int(cfg.get("opciones","tiempoespera")))
+					
+					if (TamanoTotalArchivosEnCarpeta() > int(cfg.get("opciones","maxtamano"))): 
+						Ejecutar()
+						MostrarMensajeEspera()
+					else:
+						print "Parametro desconocido"
 		else:
-			print "Parametro desconocido"
+			Ejecutar()
 	else:
-		Ejecutar()
-
+		MostrarParametros()
+		exit()
 if __name__ == "__main__":
 	main()
