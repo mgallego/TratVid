@@ -24,21 +24,21 @@ Parámetros:
 * bitrate: bitrate de compresión de video
 * threads: número de hilos
 
-## [Audio]
+#### [Audio]
 * codec: codec a utilizar (Sin implementar aún)
 
-## [rutas]
+#### [rutas]
 * temporal: directorio donde se guardarán los ficheros temporales
 * final: directorio donde se guardarán los ficheros finales
 * logs: directorio donde se guardarán los logs
 
 Estos directorios son creados automáticamente por la aplicación en caso de no existir
 
-## [salida]
+#### [salida]
 * extension: extensión para el fichero de salida
 * ficherotemporal: nombre del fichero temporal que se crea para unir todos los ficheros tratados
 
-## [opciones]
+#### [opciones]
 * eliminartemporal: [0,1] Elimina el directorio temporal al acabar la ejecución
 * eliminaroriginal: [0,1] Elimina el fichero original tras procesarlo
 * maxtamano: (demonio) máximo tamaño que debe tener la carpeta para que empiece la ejecución
@@ -56,6 +56,6 @@ I created it as useful for attaching clips that generates my video camera and pl
 Dependencies
 ------------
 
-### ffmpeg / avconv
-### avidemux2_cli
-### libavcodec-extra-53
+**ffmpeg / avconv**
+**avidemux2_cli**
+**libavcodec-extra-53**
